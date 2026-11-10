@@ -1,0 +1,12 @@
+node_modules/
+dist/
+dist-pre/
+.astro/
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+# Local inspection output (screenshots, Lighthouse reports) and private mission reports
+qa/
+reports/

@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import { t, fill, routes, formatDate, type Locale } from '../i18n';
+import { games } from '../data/games';
+import { site } from '../data/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = t(locale);
+const values = { publisher: site.publisher, hostName: site.host.name, hostCompany: site.host.company, hostAddress: site.host.address };
+---
+<Base locale={locale} title={s.legal.metaTitle} description={s.legal.metaDescription} paths={routes.legal} current="legal">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">{s.legal.eyebrow}</p>
+      <h1 class="display">{s.legal.title}</h1>
+      <p class="lead">{s.legal.updated} <time datetime={site.legalUpdated}>{formatDate(site.legalUpdated, locale)}</time></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+    <div class="legal">
+      <div>
+        <h2 class="display">{s.legal.publisherTitle}</h2>
+        {s.legal.publisher.map((p) => <p>{fill(p, values)}</p>)}
+        <p>{s.legal.contactLabel} <a class="link" href={`mailto:${site.email}`}>{site.email}</a></p>
+      </div>
+      <div>
+        <h2 class="display">{s.legal.hostTitle}</h2>
+        <p>{fill(s.legal.host, values)}</p>
+      </div>
+      <div>
+        <h2 class="display">{s.legal.ipTitle}</h2>
+        {s.legal.ip.map((p) => <p>{p}</p>)}
+      </div>
+      <div>
+        <h2 class="display">{s.legal.siteDataTitle}</h2>
+        {s.legal.siteData.map((p) => <p>{p}</p>)}
+        <p><a class="link" href={site.host.privacyUrl} rel="noopener">{s.legal.hostPrivacyLink}<Arrow external /></a></p>
+      </div>
+      <div>
+        <h2 class="display">{s.legal.gamesDataTitle}</h2>
+        <p>{s.legal.gamesData}</p>
+        <ul>
+          {games.map((game) => (
+            <li><a class="link" href={game.privacyUrl} rel="noopener">{fill(s.legal.gamePolicy, { title: game.title })} — {new URL(game.privacyUrl).host}<Arrow external /></a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+    </div>
+  </section>
+</Base>

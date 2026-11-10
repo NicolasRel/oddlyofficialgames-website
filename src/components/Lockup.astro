@@ -1,0 +1,25 @@
+---
+// The approved studio lockup (roundel, ODDLY, the OFFICIAL stamp, GAMES) as outlined paths.
+// Geometry comes from src/data/generated/lockup.json, written by scripts/build-brand.mjs. Do not edit by hand.
+import lockup from '../data/generated/lockup.json';
+
+interface Props {
+  /** Plays the stamp once on load (home hero only). Ignored under "reduce motion". */
+  animate?: boolean;
+  label?: string;
+}
+const { animate = false, label = 'Oddly Official Games' } = Astro.props;
+---
+<svg class:list={['lockup', animate && 'lockup--animate']} viewBox={lockup.viewBox} role="img" aria-label={label}>
+  <g class="lockup-body">
+    <g set:html={lockup.roundel} />
+    <path d={lockup.oddly} fill="#F8F6EF"></path>
+    <g transform={lockup.stampTransform}>
+      <g class="lockup-stamp">
+        <g set:html={lockup.stampFrame} />
+        <path d={lockup.official} fill="#F47A28"></path>
+      </g>
+    </g>
+    <path class="lockup-games" d={lockup.games} fill="#AEB4BE"></path>
+  </g>
+</svg>

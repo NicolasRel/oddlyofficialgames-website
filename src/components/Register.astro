@@ -1,0 +1,32 @@
+---
+// The register: one line per game, plus the line reserved for the next one.
+import Arrow from './Arrow.astro';
+import { t, typo, href, gameRoute, type Locale } from '../i18n';
+import { games } from '../data/games';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = t(locale);
+const next = String(games.length + 1).padStart(3, '0');
+---
+<ul class="register">
+  {games.map((game) => {
+    const copy = typo(locale, game.copy[locale]);
+    return (
+      <li>
+        <a class="row" href={href(gameRoute(game.id)[locale])}>
+          <span class="no">{s.common.registerNo} {game.number}</span>
+          <span class="title display">{game.title}</span>
+          <span class="meta">{copy.genreLine}</span>
+          <span class="state">{s.status[game.status]}</span>
+          <span class="go"><Arrow /></span>
+        </a>
+      </li>
+    );
+  })}
+  <li class="row row--empty">
+    <span class="no">{s.common.registerNo} {next}</span>
+    <span class="title display">{s.register.nextTitle}</span>
+    <span class="meta">{s.register.nextText}</span>
+  </li>
+</ul>

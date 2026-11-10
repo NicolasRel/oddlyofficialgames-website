@@ -1,0 +1,44 @@
+---
+// The large "paper" card that presents one game (home page and catalogue).
+import { Picture } from 'astro:assets';
+import Arrow from './Arrow.astro';
+import Stamp from './Stamp.astro';
+import { t, typo, href, gameRoute, type Locale } from '../i18n';
+import type { Game } from '../data/games';
+
+interface Props {
+  game: Game;
+  locale: Locale;
+  /** Heading level of the title: 2 on the catalogue, 3 under a section title. */
+  level?: 2 | 3;
+  /** True for the first card of a page: its image is loaded at once. */
+  eager?: boolean;
+}
+const { game, locale, level = 3, eager = false } = Astro.props;
+const s = t(locale);
+const copy = typo(locale, game.copy[locale]);
+const Heading = `h${level}`;
+---
+<article class="card on-paper">
+  <div class="card-art">
+    <Picture
+      src={game.keyArt}
+      formats={['avif', 'webp']}
+      widths={[320, 480, 640, 760]}
+      sizes="(min-width: 56rem) 23.75rem, 80vw"
+      alt={copy.portrait.alt}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+    />
+  </div>
+  <div class="card-body">
+    <p class="label">{s.common.fileNo} {game.number} · {copy.genreLine}</p>
+    <Heading class="display"><a href={href(gameRoute(game.id)[locale])}>{game.title}</a></Heading>
+    {copy.quote && <p class="quote">{copy.quote.text}</p>}
+    <p class="pitch">{copy.cardPitch}</p>
+    <div class="card-foot">
+      <span class="btn btn--ink" aria-hidden="true">{s.common.openFile}<Arrow /></span>
+      <Stamp text={s.status[game.status]} />
+    </div>
+  </div>
+</article>

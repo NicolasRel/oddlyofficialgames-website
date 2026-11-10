@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import { t, href, routes, type Locale } from '../i18n';
+import { site } from '../data/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = t(locale);
+const mailto = (subject: string) => `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
+---
+<Base locale={locale} title={s.contact.metaTitle} description={s.contact.metaDescription} paths={routes.contact} current="contact">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">{s.contact.eyebrow}</p>
+      <h1 class="display">{s.contact.title}</h1>
+      <p class="lead">{s.contact.lead}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <p class="contact-mail"><a class="mail" href={`mailto:${site.email}`}>{site.email}</a></p>
+      <ul class="desks">
+        {s.contact.desks.map((desk, i) => (
+          <li>
+            <p class="label">{String(i + 1).padStart(2, '0')}</p>
+            <h2 class="display">{desk.title}</h2>
+            <p>{desk.text}</p>
+            {i === 1 && <a class="link" href={href(routes.press[locale])}>{s.contact.pressKit}<Arrow /></a>}
+            <a class="btn btn--primary" href={mailto(desk.subject)}>{desk.cta}</a>
+          </li>
+        ))}
+      </ul>
+      <div class="note">
+        <h2 class="display">{s.contact.noteTitle}</h2>
+        <p>{s.contact.note}</p>
+      </div>
+    </div>
+  </section>
+</Base>

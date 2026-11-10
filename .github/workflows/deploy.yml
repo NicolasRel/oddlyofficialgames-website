@@ -1,0 +1,53 @@
+# Builds the site and publishes it on GitHub Pages at every push to main.
+# Production needs no setting. Pre-production (project URL) uses three repository variables, see README, "Publier".
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: ${{ vars.SITE_URL }}
+      BASE_PATH: ${{ vars.BASE_PATH }}
+      PUBLIC_NOINDEX: ${{ vars.PUBLIC_NOINDEX }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: |
+          # Unset variables must fall back to the production defaults of astro.config.mjs.
+          [ -n "$SITE_URL" ] || unset SITE_URL
+          [ -n "$BASE_PATH" ] || unset BASE_PATH
+          npm run build
+      - name: Check the built site
+        run: npm run check
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

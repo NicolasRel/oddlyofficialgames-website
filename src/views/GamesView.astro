@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import GameCard from '../components/GameCard.astro';
+import Register from '../components/Register.astro';
+import { t, routes, type Locale } from '../i18n';
+import { games } from '../data/games';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = t(locale);
+---
+<Base locale={locale} title={s.games.metaTitle} description={s.games.metaDescription} paths={routes.games} current="games">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">{s.games.eyebrow}</p>
+      <h1 class="display">{s.games.title}</h1>
+      <p class="lead">{s.games.lead}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap" style="display: grid; gap: 2rem">
+      {games.map((game, i) => <GameCard game={game} locale={locale} level={2} eager={i === 0} />)}
+    </div>
+  </section>
+  <section class="section section--alt" aria-label={s.games.title}>
+    <div class="wrap">
+      <Register locale={locale} />
+    </div>
+  </section>
+</Base>

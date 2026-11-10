@@ -1,0 +1,37 @@
+---
+import Roundel from './Roundel.astro';
+import { t, href, routes, otherLocale, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+  paths: { en: string; fr: string };
+  current?: string;
+}
+const { locale, paths, current } = Astro.props;
+const s = t(locale);
+const other = otherLocale(locale);
+const items = [
+  { key: 'games', label: s.nav.games, path: routes.games[locale] },
+  { key: 'press', label: s.nav.press, path: routes.press[locale] },
+  { key: 'contact', label: s.nav.contact, path: routes.contact[locale] },
+];
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href={href(routes.home[locale])} aria-current={current === 'home' ? 'page' : undefined}>
+      <Roundel />
+      <span>ODDLY <em>OFFICIAL</em> GAMES</span><span class="sr-only"> — {s.nav.home}</span>
+    </a>
+    <nav class="site-nav" aria-label={s.nav.main}>
+      <ul>
+        {items.map((item) => (
+          <li><a href={href(item.path)} aria-current={current === item.key ? 'page' : undefined}>{item.label}</a></li>
+        ))}
+      </ul>
+      <div class="lang">
+        <span aria-current="true" lang={locale}>{s.nav.thisLang}</span>
+        <a href={href(paths[other])} hreflang={other} lang={other}>{s.nav.otherLang}<span class="sr-only"> — {s.nav.otherLangLabel}</span></a>
+      </div>
+    </nav>
+  </div>
+</header>

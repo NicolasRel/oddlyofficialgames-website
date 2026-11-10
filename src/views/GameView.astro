@@ -1,0 +1,206 @@
+---
+// One template for every game page. What changes from game to game lives in src/data/games/<id>.ts.
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import Stamp from '../components/Stamp.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { t, typo, href, absolute, routes, gameRoute, type Locale } from '../i18n';
+import type { Game } from '../data/games';
+import { site } from '../data/site';
+
+interface Props { locale: Locale; game: Game }
+const { locale, game } = Astro.props;
+const s = t(locale);
+const copy = typo(locale, game.copy[locale]);
+const paths = gameRoute(game.id);
+const privacyHost = new URL(game.privacyUrl).host;
+// Width of the title's longest word in em (Big Shoulders Display 900 averages 0.5 em per capital): the hero title is sized to fit.
+const titleEm = Math.max(...game.title.split(/\s+/).map((word) => word.length)) * 0.5;
+const stores = [
+  { name: s.common.appStore, url: game.stores.appStore },
+  { name: s.common.googlePlay, url: game.stores.googlePlay },
+];
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'VideoGame',
+    name: game.title,
+    url: absolute(paths[locale], Astro.site),
+    description: copy.metaDescription,
+    image: absolute(game.ogImage[locale], Astro.site),
+    genre: ['Incremental game', 'Idle game'],
+    gamePlatform: ['iOS', 'Android'],
+    operatingSystem: 'iOS, Android',
+    applicationCategory: 'Game',
+    inLanguage: ['en', 'fr'],
+    author: { '@type': 'Organization', name: site.name, url: absolute(routes.home.en, Astro.site) },
+    publisher: { '@type': 'Organization', name: site.name, url: absolute(routes.home.en, Astro.site) },
+  },
+];
+---
+<Base
+  locale={locale}
+  title={copy.metaTitle}
+  description={copy.metaDescription}
+  paths={paths}
+  current="games"
+  ogImage={game.ogImage[locale]}
+  ogImageAlt={`${game.title} — ${copy.portrait.alt}`}
+  jsonLd={jsonLd}
+>
+  <section class="game-hero">
+    <div class="wrap">
+      <div class="text">
+        <p class="label">{copy.kicker}</p>
+        <h1 class="display" style={`--title-em: ${titleEm}`}>{game.title}</h1>
+        <p class="promise display">{copy.promise.map((line) => <span>{line}</span>)}</p>
+        <p class="pitch">{copy.pitch}</p>
+        <div class="status">
+          <Stamp text={s.status[game.status]} />
+          <p>{copy.statusNote}</p>
+        </div>
+      </div>
+      <figure class="portrait">
+        <Picture
+          src={game.keyArt}
+          formats={['avif', 'webp']}
+          widths={[360, 540, 720, 864]}
+          sizes="(min-width: 60rem) 25rem, 85vw"
+          alt={copy.portrait.alt}
+          loading="eager"
+          fetchpriority="high"
+        />
+        <figcaption>
+          <span class="name display">{copy.portrait.title}</span>
+          <span class="label">{copy.portrait.label}</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  {copy.quote && (
+    <section class="motto on-paper" aria-label={copy.quote.source}>
+      <div class="wrap">
+        <p class="label">{copy.quote.source}</p>
+        <p class="text display">{copy.quote.text}</p>
+      </div>
+    </section>
+  )}
+
+  <section class="section" aria-labelledby="steps-title">
+    <div class="wrap">
+      <SectionHead num="01" title={copy.stepsTitle} id="steps-title" />
+      <ol class="steps">
+        {copy.steps.map((step) => (
+          <li>
+            <h3 class="display">{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="gallery-block" aria-labelledby="gallery-title">
+    <div class="wrap">
+      <SectionHead num="02" title={s.game.galleryTitle} id="gallery-title" />
+    </div>
+    <div class="gallery" tabindex="0" role="region" aria-label={`${s.game.galleryTitle}. ${s.game.galleryHint}`}>
+      <ul>
+      {game.screenshots.map((shot) => (
+        <li>
+          <Picture src={shot.image} formats={['avif', 'webp']} widths={[260, 390, 520, 600]} sizes="16.25rem" alt={shot.alt[locale]} loading="lazy" />
+        </li>
+      ))}
+      </ul>
+    </div>
+    <div class="wrap">
+      <p class="gallery-note">{copy.galleryNote}</p>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="features-title">
+    <div class="wrap">
+      <SectionHead num="03" title={copy.featuresTitle} id="features-title" />
+      <ul class="features">
+        {copy.features.map((feature) => (
+          <li>
+            <h3 class="display">{feature.title}</h3>
+            <p>{feature.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap two">
+      <div>
+        <SectionHead num="04" title={s.game.trailerTitle} />
+        {game.trailer?.youtubeId ? (
+          <iframe
+            class="trailer-frame"
+            src={`https://www.youtube-nocookie.com/embed/${game.trailer.youtubeId}`}
+            title={`${game.title} — ${s.game.trailerTitle}`}
+            loading="lazy"
+            allow="encrypted-media; picture-in-picture; fullscreen"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        ) : game.trailer?.file ? (
+          <video class="trailer-frame" controls preload="none" poster={game.trailer.poster ? href(game.trailer.poster) : undefined} aria-label={`${game.title} — ${s.game.trailerTitle}`}>
+            <source src={href(game.trailer.file)} type="video/mp4" />
+          </video>
+        ) : (
+          <div class="trailer-slot">
+            <div>
+              <p class="display">{s.game.trailerPendingTitle}</p>
+              <p>{s.game.trailerPendingText}</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <div>
+        <SectionHead num="05" title={s.game.factsTitle} />
+        <dl class="facts">
+          {copy.facts.map((fact) => (
+            <>
+              <dt>{fact.label}</dt>
+              <dd>{fact.value}</dd>
+            </>
+          ))}
+        </dl>
+        <ul class="stores" aria-label={s.game.storesLabel}>
+          {stores.map((store) => (
+            <li>
+              {store.url ? (
+                <a class="store" href={store.url} rel="noopener">{store.name}<Arrow external /></a>
+              ) : (
+                <span class="store">{store.name} · {s.common.notListed}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--veil support">
+    <div class="wrap">
+      <div class="two">
+        <div>
+          <h2 class="display">{s.game.supportTitle}</h2>
+          <p>{copy.supportText} <a class="link" href={`mailto:${game.supportEmail}?subject=${encodeURIComponent(`${game.title} — ${s.game.supportTitle}`)}`}>{game.supportEmail}</a>.</p>
+        </div>
+        <div>
+          <h2 class="display">{s.game.privacyTitle}</h2>
+          <p>{copy.privacyText} <a class="link" href={game.privacyUrl} rel="noopener">{privacyHost}<Arrow external /></a>.</p>
+        </div>
+      </div>
+      <p class="actions more">
+        <a class="btn btn--ghost" href={href(routes.press[locale])}>{s.game.pressLink}<Arrow /></a>
+        <a class="btn btn--ghost" href={href(routes.games[locale])}>{s.game.backToRegister}</a>
+      </p>
+    </div>
+  </section>
+</Base>

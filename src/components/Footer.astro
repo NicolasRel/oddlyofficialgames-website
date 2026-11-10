@@ -1,0 +1,59 @@
+---
+import Arrow from './Arrow.astro';
+import { t, href, routes, gameRoute, fill, type Locale } from '../i18n';
+import { games } from '../data/games';
+import { site } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  paths: { en: string; fr: string };
+}
+const { locale, paths } = Astro.props;
+const s = t(locale);
+---
+<footer class="site-footer">
+  <div class="wrap top">
+    <div class="about">
+      <span class="brand"><span>ODDLY <em>OFFICIAL</em> GAMES</span></span>
+      <p class="muted">{s.footer.tagline}</p>
+    </div>
+    <div class="cols">
+      <nav aria-label={s.footer.studio}>
+        <p class="label">{s.footer.studio}</p>
+        <ul>
+          <li><a href={href(routes.home[locale])}>{s.nav.home}</a></li>
+          <li><a href={href(routes.games[locale])}>{s.nav.games}</a></li>
+          <li><a href={href(routes.press[locale])}>{s.nav.press}</a></li>
+          <li><a href={href(routes.contact[locale])}>{s.nav.contact}</a></li>
+        </ul>
+      </nav>
+      <nav aria-label={s.footer.gamesHeading}>
+        <p class="label">{s.footer.gamesHeading}</p>
+        <ul>
+          {games.map((game) => <li><a href={href(gameRoute(game.id)[locale])}>{game.title}</a></li>)}
+        </ul>
+      </nav>
+      <nav aria-label={s.footer.legalHeading}>
+        <p class="label">{s.footer.legalHeading}</p>
+        <ul>
+          <li><a href={href(routes.legal[locale])}>{s.footer.legal}</a></li>
+          {games.map((game) => (
+            <li>
+              <a href={game.privacyUrl} rel="noopener">
+                {fill(s.footer.privacyOf, { title: game.title })}<Arrow external />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div class="wrap"><div class="bottom">
+    <p>© {site.copyrightYear} {site.name}. {s.footer.rights}</p>
+    <p>
+      <a href={href(paths.en)} hreflang="en" lang="en" aria-current={locale === 'en' ? 'true' : undefined}>English</a>
+      <span aria-hidden="true"> · </span>
+      <a href={href(paths.fr)} hreflang="fr" lang="fr" aria-current={locale === 'fr' ? 'true' : undefined}>Français</a>
+    </p>
+  </div></div>
+</footer>

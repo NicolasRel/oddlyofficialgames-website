@@ -1,0 +1,11 @@
+---
+// One page per game of the catalogue (src/data/games).
+import GameView from '../../views/GameView.astro';
+import { games } from '../../data/games';
+
+export function getStaticPaths() {
+  return games.map((game) => ({ params: { slug: game.id }, props: { game } }));
+}
+const { game } = Astro.props;
+---
+<GameView locale="en" game={game} />

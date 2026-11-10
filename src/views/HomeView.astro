@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import Lockup from '../components/Lockup.astro';
+import Arrow from '../components/Arrow.astro';
+import SectionHead from '../components/SectionHead.astro';
+import GameCard from '../components/GameCard.astro';
+import Register from '../components/Register.astro';
+import { t, href, absolute, routes, type Locale } from '../i18n';
+import { games } from '../data/games';
+import { site } from '../data/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const s = t(locale);
+const featured = games[0];
+const home = absolute(routes.home.en, Astro.site);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${home}#studio`,
+    name: site.name,
+    url: home,
+    logo: absolute('/press/oddly-official-games/oddly-official-games-logo-on-ink.png', Astro.site),
+    email: site.email,
+    description: s.common.studioDescription,
+    address: { '@type': 'PostalAddress', addressCountry: 'FR' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    url: home,
+    inLanguage: ['en', 'fr'],
+    publisher: { '@id': `${home}#studio` },
+  },
+];
+---
+<Base locale={locale} title={s.home.metaTitle} description={s.home.metaDescription} paths={routes.home} current="home" jsonLd={jsonLd}>
+  <section class="hero">
+    <div class="wrap">
+      <h1><Lockup animate /></h1>
+      <div class="hero-text">
+        <p class="label">{s.home.eyebrow}</p>
+        <p class="proposition display">{s.home.proposition}</p>
+        <p class="intro">{s.common.studioDescription}</p>
+        <p class="first">{s.home.firstFile[0]}<strong>{s.home.firstFile[1]}</strong>{s.home.firstFile[2]}</p>
+        <div class="actions">
+          <a class="btn btn--primary" href="#featured">{s.home.ctaGames}</a>
+          <a class="btn btn--ghost" href="#rules">{s.home.ctaRules}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label={s.home.statsLabel}>
+    <div class="wrap">
+      <dl>
+        {s.home.stats.map((stat) => (
+          <div>
+            <dt class="label">{stat.label}</dt>
+            <dd>{stat.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="section" id="featured" aria-labelledby="featured-title">
+    <div class="wrap">
+      <SectionHead num="01" title={s.home.featuredTitle} id="featured-title" />
+      <GameCard game={featured} locale={locale} />
+    </div>
+  </section>
+
+  <section class="section section--alt" id="rules" aria-labelledby="rules-title">
+    <div class="wrap">
+      <SectionHead num="02" title={s.home.rulesTitle} id="rules-title" />
+      <p class="section-lead">{s.home.rulesLead}</p>
+      <ol class="rules">
+        {s.home.rules.map((rule, i) => (
+          <li>
+            <p class="label">{s.home.article} {i + 1}</p>
+            <h3 class="display">{rule.title}</h3>
+            <p>{rule.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="register" aria-labelledby="register-title">
+    <div class="wrap">
+      <SectionHead num="03" title={s.home.registerTitle} id="register-title" />
+      <Register locale={locale} />
+      <p class="after-register"><a class="btn btn--ghost" href={href(routes.games[locale])}>{s.home.registerAll}<Arrow /></a></p>
+    </div>
+  </section>
+
+  <section class="section section--veil contact-band" aria-labelledby="contact-title">
+    <div class="wrap">
+      <div class="text">
+        <h2 class="label" id="contact-title"><span style="color: var(--cone)" aria-hidden="true">04 · </span>{s.home.contactTitle}</h2>
+        <a class="mail" href={`mailto:${site.email}`}>{site.email}</a>
+        <p class="muted">{s.home.contactText}</p>
+      </div>
+      <a class="btn btn--ghost" href={href(routes.contact[locale])}>{s.home.contactMore}<Arrow /></a>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,23 @@
+---
+// Served by the host for any unknown address, in either language: the page speaks both.
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import { t, href, routes } from '../i18n';
+
+const en = t('en');
+const fr = t('fr');
+---
+<Base locale="en" title={en.notFound.metaTitle} description={en.notFound.text} paths={routes.home} noindex>
+  <section class="notfound">
+    <div class="wrap">
+      <p class="label">{en.notFound.code} · {fr.notFound.code}</p>
+      <h1 class="display">{en.notFound.title}</h1>
+      <p>{en.notFound.text}</p>
+      <p lang="fr">{fr.notFound.title} {fr.notFound.text}</p>
+      <p class="actions">
+        <a class="btn btn--primary" href={href(routes.home.en)}>{en.notFound.home}<Arrow /></a>
+        <a class="btn btn--ghost" href={href(routes.home.fr)} lang="fr" hreflang="fr">{fr.notFound.home}</a>
+      </p>
+    </div>
+  </section>
+</Base>
