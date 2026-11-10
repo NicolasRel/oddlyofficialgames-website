@@ -130,7 +130,7 @@ npm run check
 
 **Production.** Aucun réglage : sans variable, le site est construit pour `https://oddlyofficialgames.com`.
 
-**Préproduction.** Tant que le domaine n'est pas branché, le site est servi à l'adresse du projet, `https://nicolasrel.github.io/oddlyofficialgames-website/`. Trois variables du dépôt (Settings › Secrets and variables › Actions › Variables) règlent ce mode :
+**Préproduction.** Tant que le domaine n'est pas branché, le site peut être servi à l'adresse du projet, `https://nicolasrel.github.io/oddlyofficialgames-website/`. Il faut pour cela que le dépôt soit public et que GitHub Pages soit activé en mode « GitHub Actions » (Settings › Pages). Trois variables du dépôt (Settings › Secrets and variables › Actions › Variables) règlent ce mode :
 
 | Variable | Valeur |
 |---|---|

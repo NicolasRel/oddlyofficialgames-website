@@ -100,7 +100,18 @@ Sur les 50 captures : aucune erreur de console, aucune requête en échec, aucun
 
 ## 7. Préproduction
 
-À compléter après le déploiement : voir la fin de ce document.
+**État au 10/11/2026 : la préproduction publique n'est pas en ligne.** Le dépôt a été créé en privé ; GitHub Pages gratuit demande un dépôt public, et ce passage en public attend l'accord de Nicolas.
+
+Ce qui a été vérifié à la place :
+
+| Contrôle | Résultat |
+|---|---|
+| Workflow sur GitHub (premier push, commit `fa56e29`) | `npm ci`, build et `npm run check` réussis sur le serveur de GitHub ; seule l'étape de mise en ligne échoue, Pages n'étant pas activé |
+| Build de préproduction (`SITE_URL`, `BASE_PATH`, `PUBLIC_NOINDEX`) | 13 pages ; `npm run check` avec le chemin de base : « No problem found » |
+| Même build servi en local sous `/oddlyofficialgames-website/` | pages, polices, images de partage, fichiers presse, plan du site : 200 ; 6 captures (3 pages, téléphone et ordinateur) sans erreur de console, sans requête en échec, sans débordement |
+| Non-indexation | balise `noindex, nofollow` présente sur les pages de ce build |
+
+Restent à faire une fois le site en ligne : Lighthouse sur l'adresse réelle, contrôle des trois adresses après la bascule du domaine.
 
 ## 8. Ce qui reste, et ce qui n'a pas été vérifié
 
