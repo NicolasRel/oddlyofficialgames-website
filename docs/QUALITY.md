@@ -100,18 +100,35 @@ Sur les 50 captures : aucune erreur de console, aucune requête en échec, aucun
 
 ## 7. Préproduction
 
-**État au 10/11/2026 : la préproduction publique n'est pas en ligne.** Le dépôt a été créé en privé ; GitHub Pages gratuit demande un dépôt public, et ce passage en public attend l'accord de Nicolas.
-
-Ce qui a été vérifié à la place :
+**En ligne depuis le 10/11/2026** : `https://nicolasrel.github.io/oddlyofficialgames-website/`. Dépôt public, GitHub Pages en mode « GitHub Actions », accord de Nicolas (« Oui, publie »). Ce build demande aux moteurs de ne pas l'indexer.
 
 | Contrôle | Résultat |
 |---|---|
-| Workflow sur GitHub (premier push, commit `fa56e29`) | `npm ci`, build et `npm run check` réussis sur le serveur de GitHub ; seule l'étape de mise en ligne échoue, Pages n'étant pas activé |
-| Build de préproduction (`SITE_URL`, `BASE_PATH`, `PUBLIC_NOINDEX`) | 13 pages ; `npm run check` avec le chemin de base : « No problem found » |
-| Même build servi en local sous `/oddlyofficialgames-website/` | pages, polices, images de partage, fichiers presse, plan du site : 200 ; 6 captures (3 pages, téléphone et ordinateur) sans erreur de console, sans requête en échec, sans débordement |
-| Non-indexation | balise `noindex, nofollow` présente sur les pages de ce build |
+| Workflow `Deploy` (exécution 42829164339) | build, `npm run check` et mise en ligne réussis |
+| Adresses | accueil, pages françaises, page du jeu, presse, mentions légales, polices, image de partage, plan du site, `404.html` : 200 ; adresse inconnue : 404 |
+| 50 captures en ligne (10 pages à 5 tailles) | aucune erreur de console, aucune requête en échec, aucun débordement |
+| HTTPS | imposé ; en-tête `Strict-Transport-Security` présent |
+| Non-indexation | balise `noindex, nofollow` sur les pages |
+| Lien vers la politique de confidentialité | présent, vers `https://privacy.oddlyofficialgames.com` |
 
-Restent à faire une fois le site en ligne : Lighthouse sur l'adresse réelle, contrôle des trois adresses après la bascule du domaine.
+**Lighthouse 13.6.0 sur l'adresse en ligne**, 8 pages, mobile et ordinateur (16 mesures) :
+
+| Catégorie | Résultat |
+|---|---|
+| Performance | 100 sur les 16 mesures ; LCP de 0,8 à 1,4 s en mobile, de 0,2 à 0,4 s sur ordinateur ; CLS de 0 à 0,024 |
+| Accessibilité | 100 sur les 16 mesures |
+| Bonnes pratiques | 100 sur les 16 mesures |
+| SEO | 63 à 66 : un seul audit en échec, « Page is blocked from indexing ». C'est la non-indexation voulue de la préproduction ; le build de production ne la porte pas (100 mesuré en local, section 2) |
+
+**Non-régression, relevée après le déploiement.**
+
+| Adresse | Constat |
+|---|---|
+| `https://privacy.oddlyofficialgames.com` | 200 ; contenu identique (même empreinte SHA-256 qu'avant la mission) |
+| `https://oddlyofficialgames.com` | 200 ; toujours la page d'attente de Squarespace |
+| `https://www.oddlyofficialgames.com` | 200 ; idem |
+
+Restent à faire à la bascule du domaine : Lighthouse sur `oddlyofficialgames.com` (SEO compris), contrôle des trois adresses, test de la messagerie.
 
 ## 8. Ce qui reste, et ce qui n'a pas été vérifié
 
