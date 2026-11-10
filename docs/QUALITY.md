@@ -128,7 +128,21 @@ Sur les 50 captures : aucune erreur de console, aucune requête en échec, aucun
 | `https://oddlyofficialgames.com` | 200 ; toujours la page d'attente de Squarespace |
 | `https://www.oddlyofficialgames.com` | 200 ; idem |
 
-Restent à faire à la bascule du domaine : Lighthouse sur `oddlyofficialgames.com` (SEO compris), contrôle des trois adresses, test de la messagerie.
+**Bascule, côté GitHub, faite le 10/11/2026** (accord de Nicolas : « Oui, bascule »). Variables de préproduction supprimées, domaine `oddlyofficialgames.com` déclaré (état « verified »), workflow `Deploy` réussi (exécution 42831649994).
+
+Contrôle fait avant tout changement DNS, en interrogeant les quatre serveurs de GitHub Pages avec le nom du domaine :
+
+| Contrôle | Résultat |
+|---|---|
+| 12 pages, polices, image de partage, fichier presse, favicon, plan du site | 200 ; adresse inconnue : 404 |
+| Version servie | production : adresses canoniques en `https://oddlyofficialgames.com/…`, aucune balise `noindex`, `robots.txt` ouvert avec le plan du site |
+| `www.oddlyofficialgames.com` | 301 vers `oddlyofficialgames.com` |
+| Ancienne adresse de préproduction | 301 vers `oddlyofficialgames.com` |
+| `privacy.oddlyofficialgames.com` | 200, même empreinte ; son réglage GitHub Pages est inchangé |
+
+Le cache de GitHub (dix minutes) a servi l'ancienne version pendant environ une minute après le déploiement.
+
+**En attente : le DNS chez Squarespace.** Tant que les quatre A de la racine et le CNAME `www` ne sont pas modifiés, le domaine affiche la page d'attente de Squarespace. Après la modification : certificat et « Enforce HTTPS », Lighthouse sur le domaine (SEO compris), contrôle des trois adresses, test de la messagerie.
 
 ## 8. Ce qui reste, et ce qui n'a pas été vérifié
 

@@ -130,7 +130,7 @@ npm run check
 
 **Production.** Aucun réglage : sans variable, le site est construit pour `https://oddlyofficialgames.com`.
 
-**Préproduction.** Tant que le domaine n'est pas branché, le site est servi à l'adresse du projet, `https://nicolasrel.github.io/oddlyofficialgames-website/` (dépôt public, GitHub Pages en mode « GitHub Actions »). Trois variables du dépôt (Settings › Secrets and variables › Actions › Variables) règlent ce mode :
+**Préproduction.** Elle a servi du 10/11/2026 jusqu'à la déclaration du domaine, le même jour. Pour en refaire une (domaine retiré de Settings › Pages), le site est servi à l'adresse du projet, `https://nicolasrel.github.io/oddlyofficialgames-website/`. Trois variables du dépôt (Settings › Secrets and variables › Actions › Variables) règlent ce mode :
 
 | Variable | Valeur |
 |---|---|
@@ -138,7 +138,7 @@ npm run check
 | `BASE_PATH` | `/oddlyofficialgames-website/` |
 | `PUBLIC_NOINDEX` | `1` (demande aux moteurs de ne pas indexer) |
 
-**Bascule vers le domaine.** Supprimer les trois variables, indiquer `oddlyofficialgames.com` dans Settings › Pages › Custom domain, relancer le déploiement, puis modifier le DNS. La procédure complète, avec le retour arrière, est dans `docs/DECISIONS.md`, section « Bascule du domaine ».
+**Bascule vers le domaine.** Côté GitHub, elle est faite depuis le 10/11/2026 : variables supprimées, domaine déclaré, build de production en ligne. Pour mémoire : supprimer les trois variables, indiquer `oddlyofficialgames.com` dans Settings › Pages › Custom domain, relancer le déploiement, puis modifier le DNS. La procédure complète, avec le retour arrière, est dans `docs/DECISIONS.md`, section « Bascule du domaine ».
 
 ## Politique de confidentialité
 
