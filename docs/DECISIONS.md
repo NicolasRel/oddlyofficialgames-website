@@ -100,6 +100,7 @@ Le site ne dépend pas de l'hébergeur : `dist/` est un dossier de fichiers stat
 - Politique de sécurité du contenu : tout vient du site lui-même ; seule exception prévue, le lecteur `youtube-nocookie.com` pour une future bande-annonce.
 - Aucun formulaire : le contact se fait par lien `mailto:`. Il n'y a donc ni traitement de données par le site, ni bandeau de consentement.
 - Les mentions légales distinguent le site (aucun cookie ; l'hébergeur traite l'adresse IP pour servir les pages) et les jeux (politique propre à chaque jeu, à son adresse).
+- Les mentions légales, avec le nom de l'éditeur et sans adresse postale, ont été validées par Nicolas le 10/11/2026 (« Oui, je valide »).
 
 ## 7. Bascule du domaine
 
